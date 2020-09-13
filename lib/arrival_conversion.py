@@ -9,7 +9,7 @@ def make_arrivals(local_coordinates: str, gps_coordinates: str):
     arrivals_gps = coord_conversion.gps_list(gps_coordinates)
     arrivals_final_coords = coord_conversion.final_list(arrivals_timestamps, arrivals_gps)
 
-    for name, gps, timestamp, messages in arrivals_final_coords:
+    for name, gps, timestamp in arrivals_final_coords:
         new_dict = {}
         new_dict["name"] = name
         new_dict["coordinates"] = gps
