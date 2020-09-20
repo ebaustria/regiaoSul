@@ -21,7 +21,7 @@ const DATA_URL = {
   //TRIPS: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json' // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/ebaustria/coord_conversion/master/one_trace.json',
   ROUTES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/routes_brazil.json',
-  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/messages/messages.json',
+  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/messages.json',
   TRIPS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/trips.json',
   STOPS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/stops_final.json',
   ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/arrivals.json'
