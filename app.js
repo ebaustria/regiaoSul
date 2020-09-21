@@ -132,13 +132,13 @@ export default class App extends Component {
         radiusMinPixels: 0,
         radiusMaxPixels: 100,
         getPosition: d => d.coordinates,
-        getRadius: d => isVisible(d.timestamp, this.state.time, 40, 500),
+        getRadius: d => isVisible(d.timestamp, this.state.time, 100, 500),
         getFillColor: d => [253, 128, 93],
         getLineColor: d => [0, 0, 0],
         currentTime: this.state.time,
         getTimestamps: d => d.timestamp,
         updateTriggers: {
-          getRadius: [d => isVisible(d.timestamp, this.state.time, 40, 500)]
+          getRadius: [d => isVisible(d.timestamp, this.state.time, 100, 500)]
         },
         transitions: {
           getRadius: {
