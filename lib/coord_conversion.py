@@ -25,9 +25,11 @@ def make_trips(local_coordinates: str, gps_coordinates: str) -> None:
             "path": [],
             "timestamps": []
         }
+
         for coords, timestamp in new_dict[name]:
             new_json["path"].append(coords)
             new_json["timestamps"].append(timestamp)
+
         json_list.append(new_json)
 
     write_json(json_list)
@@ -53,16 +55,14 @@ def gps_list(gps_coordinates: str) -> List[Tuple[Tuple[float, float], List[float
             coords_list_1.append(entry)
 
     # Reformat the data and convert it back to numeric values.
-    coords_list_2 = []
+    return [gps_tuple(entry) for entry in coords_list_1]
 
-    for coords, gps in coords_list_1:
-        coords = cast_to_float(coords)
-        gps = cast_to_float(gps)
-        gps = [gps[1], gps[0]]
-        new_tuple = (coords, gps)
-        coords_list_2.append(new_tuple)
 
-    return coords_list_2
+def gps_tuple(tup: Tuple[str, str]):
+    coords = cast_to_float(tup[0])
+    gps = cast_to_float(tup[1])
+    gps = [gps[1], gps[0]]
+    return coords, gps
 
 
 def timestamps_list(local_coordinates: str) -> List[Tuple[str, Tuple[float, float], float, int]]:
@@ -83,17 +83,15 @@ def timestamps_list(local_coordinates: str) -> List[Tuple[str, Tuple[float, floa
             time_coords_1.append(tup)
 
     # Reformats the coordinates in time_coords_1 and converts them from strings to numeric values.
-    time_coords_2 = []
+    return [time_tuple(entry) for entry in time_coords_1]
 
-    for name, coords, time, messages in time_coords_1:
-        time = time.strip(',')
-        time = float(time)
-        messages = int(messages)
-        coords = cast_to_float(coords)
-        new_tuple = (name, coords, time, messages)
-        time_coords_2.append(new_tuple)
 
-    return time_coords_2
+def time_tuple(tup: Tuple[str, str, str, str]):
+    coords = cast_to_float(tup[1])
+    time = tup[2].strip(',')
+    time = float(time)
+    messages = int(tup[3])
+    return tup[0], coords, time, messages
 
 
 # Makes a list of tuples containing the GPS coordinates and timestamps from the two lists passed as parameters. Each

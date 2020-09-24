@@ -4,24 +4,27 @@ import json
 
 
 def message_json(local_coordinates: str, gps_coordinates: str):
-    dict_list = []
+    # dict_list = []
 
     message_timestamps = parse_timestamps(local_coordinates)
     message_gps = cc.gps_list(gps_coordinates)
     message_final_coords = combine_lists(message_timestamps, message_gps)
 
-    for gps, timestamp, action in message_final_coords:
-        new_dict = {}
-        new_dict["coordinates"] = gps
-        new_dict["timestamp"] = timestamp
-        new_dict["notification"] = action
-
-        dict_list.append(new_dict)
+    dict_list = [single_dictionary(entry) for entry in message_final_coords]
 
     json_file = json.dumps(dict_list, indent=2)
 
     with open("messages.json", "w") as file:
         file.write(json_file)
+
+
+def single_dictionary(tup: Tuple[List[float], float, str]):
+    new_dict = {}
+    new_dict["coordinates"] = tup[0]
+    new_dict["timestamp"] = tup[1]
+    new_dict["notification"] = tup[2]
+
+    return new_dict
 
 
 def carried_messages(local_coordinates: str, gps_coordinates: str):
