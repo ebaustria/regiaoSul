@@ -106,6 +106,7 @@ def final_list(timestamps: List[Tuple[str, Tuple[float, float], float, int]],
             if coords == local:
                 new = (name, gps, timestamp, messages)
                 final_coords.append(new)
+                break
 
     return final_coords
 

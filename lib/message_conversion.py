@@ -4,7 +4,6 @@ import json
 
 
 def message_json(local_coordinates: str, gps_coordinates: str):
-    # dict_list = []
 
     message_timestamps = parse_timestamps(local_coordinates)
     message_gps = cc.gps_list(gps_coordinates)
