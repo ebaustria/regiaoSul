@@ -13,21 +13,70 @@ git clone https://github.com/ebaustria/deck.gl.git
 git clone https://github.com/ebaustria/the-one.git
 ```
 
-Navigate to the-one and switch to the correct branch:
+In order to visualize public transit in deck.gl, it is necessary to create a file that maps local coordinates (used in the-ONE) to GPS coordinates. There are two ways to do this depending on whether you are visualizing regiaoSul or a short-distance scenario.
+
+### regiaoSul
+
+Navigate to ```regiaoSul``` and run ```readMap.py```:
 
 ```
-cd the-one
-git checkout longDistance
+cd regiaoSul
+python3 -m readMap
 ```
 
-Compile the code and run the simulation:
+On line 136, ```readMap.py``` writes a file called ```gps_coordinates_brazil.csv```. This file is a mapping of the local coordinates of each node (used in the ONE and taken from ```local_coordinates_brazil.txt```) to that node's corresponding GPS coordinates. Running ```readMap.py``` also writes a WKT linestring file for each route that consists of GPS coordinates. These files are written on line 132. The WKT linestring file names have the format ```route_name + _gps_nodes.wkt```. Move each of the WKT linestring files to ```regiaoSul/routes```.
+
+### Short-Distance Scenarios
+
+Navigate to ```the-one``` and compile the program:
 
 ```
 ./compile.sh
-./one.sh regiaoSul_settings.txt
+cd the-one
 ```
 
-**Note**: If you are using Java 11, you will need to compile the program with ```./compileJava11.sh```. ```the-one/README.txt``` or ```the-one/README.md``` can be consulted for more information on compiling and running the-ONE, if necessary. It may be necessary to remove the flight recorder in order to run the simulation. If this is the case, open ```the-one/one.sh``` and remove ```-XX:+FlightRecorder  -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr ``` from the file. Afterwards, it should work. When the simulation is finished, it will write two reports. One of the reports has the following form: DTNHost name, local coordinates, timestamp. The DTNHost name is the name of the DTNHost in question, the local coordinates are a pair of local coordinates used in the ONE, and the timestamp is the simulation time at which the DTNHost is located at the local coordinates in question. The other report has the following form: local coordinates, timestamp, action. The action is a short string that describes the messaging activity of the DTNHost at that timestamp.
+**Note**: If you are using Java 11, you will need to compile the program with ```./compileJava11.sh```. ```the-one/README.txt``` or ```the-one/README.md``` can be consulted for more information on compiling and running the-ONE, if necessary.
+
+Navigate to ```the-one/toolkit/gtfs``` and prepare a map for one of the scenarios in ```the-one/toolkit/gtfs/map_definitions```:
+
+<pre>
+cd toolkit/gtfs
+./prepare_map.sh <i>your_map_definition</i>.sh
+</pre>
+
+Next, navigate to the map you just created, create the GTFS files for the map, navigate to the output directory, and compress the files into a zip drive:
+
+<pre>
+cd maps/<i>your_map</i>
+pfaedle -D -m tram -x ./<i>your_map</i>.osm .
+cd gtfs-out
+zip <i>your_map</i>.zip *
+</pre>
+
+Navigate back to ```the-one/toolkit/gtfs``` and run ```scenario.py``` using the zip drive you just made as an argument:
+
+<pre>
+cd ..
+cd ..
+cd ..
+python3 scenario.py -t 0 maps/freiburg1/gtfs-out/<i>your_map</i>.zip
+</pre>
+
+Running ```scenario.py``` creates the files that are needed to run the simulation with your map, and it will also create a file called ```gps_coordinates.csv```. This file contains the mapping of local coordinates to GPS coordinates. Move this file to the ```regiaoSul``` repository.
+
+### Running the-ONE
+
+After creating the mapping of local coordinates to GPS coordinates, navigate to the-one, compile the code if you haven't already, and run the simulation:
+
+<pre>
+cd
+cd <i>your_path_to</i>/the-one
+./compile.sh
+./one.sh <i>your_map</i>_settings.txt
+</pre>
+
+# CONTINUE WORKING HERE
+**Note**: It may be necessary to remove the flight recorder in order to run the simulation. If this is the case, open ```the-one/one.sh``` and remove ```-XX:+FlightRecorder  -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr ``` from the file. Afterwards, it should work. When the simulation is finished, it will write two reports. One of the reports has the following form: DTNHost name, local coordinates, timestamp. The DTNHost name is the name of the DTNHost in question, the local coordinates are a pair of local coordinates used in the ONE, and the timestamp is the simulation time at which the DTNHost is located at the local coordinates in question. The other report has the following form: local coordinates, timestamp, action. The action is a short string that describes the messaging activity of the DTNHost at that timestamp.
 
 Open ```the-one/reports```. Find the aforementioned reports. They should be the most recent reports. Their names should end with ```LocalCoordinatesReport.txt``` and ```MessageCoordinatesReport.txt```. If it is your first time running the simulation, they will be the only files in ```the-one/reports```. Rename the report that ends with ```LocalCoordinatesReport.txt``` as ```local_coordinates_brazil.txt```, and rename the report that ends with ```MessageCoordinatesReport.txt``` as ```messages.txt```. Move both of these files to the ```regiaoSul``` repository.
 
@@ -45,13 +94,6 @@ pip install -r requirements.txt
 ```
 
 ## Creating JSON Files:
-Run ```readMap.py```:
-
-```
-python3 -m readMap
-```
-
-On line 136, ```readMap.py``` writes a file called ```gps_coordinates_brazil.csv```. This file is a mapping of the local coordinates of each node (used in the ONE and taken from ```local_coordinates_brazil.txt```) to that node's corresponding GPS coordinates. Running ```readMap.py``` also writes a WKT linestring file for each route that consists of GPS coordinates. These files are written on line 132. The WKT linestring file names have the format ```route_name + _gps_nodes.wkt```.
 
 Run ```json_generator.py```:
 
