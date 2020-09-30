@@ -58,7 +58,7 @@ def gps_list(gps_coordinates: str) -> List[Tuple[Tuple[float, float], List[float
     return [gps_tuple(entry) for entry in coords_list_1]
 
 
-def gps_tuple(tup: Tuple[str, str]):
+def gps_tuple(tup: Tuple[str, str]) -> Tuple[Tuple[float, float], List[float]]:
     coords = cast_to_float(tup[0])
     gps = cast_to_float(tup[1])
     gps = [gps[1], gps[0]]
@@ -86,7 +86,7 @@ def timestamps_list(local_coordinates: str) -> List[Tuple[str, Tuple[float, floa
     return [time_tuple(entry) for entry in time_coords_1]
 
 
-def time_tuple(tup: Tuple[str, str, str, str]):
+def time_tuple(tup: Tuple[str, str, str, str]) -> Tuple[str, Tuple[float, float], float, int]:
     coords = cast_to_float(tup[1])
     time = tup[2].strip(',')
     time = float(time)
